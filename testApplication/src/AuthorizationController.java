@@ -7,6 +7,8 @@ import javafx.scene.control.*;
 import javafx.stage.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AuthorizationController {
     @FXML
@@ -26,13 +28,18 @@ public class AuthorizationController {
     }
 
 
-    public void clickRegistrationButton() throws Exception{
+    public void clickRegistrationButton(){
         Commands commands=new Commands();
         commands.setLogin(readLogin());
         Main.owner=commands.getLogin();
         commands.setPassword(Main.cryptographer(readPassword()));
         commands.setName("checkLogin");
-        commands=sendRecieve(commands);
+        try {
+            commands=sendRecieve(commands);
+        }
+        catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         result.setText(commands.getResult());
         login.clear();
         password.clear();

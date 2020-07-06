@@ -2,6 +2,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.*;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class GenreController {
     @FXML
     private Button returnButton;
@@ -9,6 +13,7 @@ public class GenreController {
     private TextField textField;
     @FXML
     private Label result;
+
 
     public void returnButtonClick(){
         Stage stage=(Stage)returnButton.getScene().getWindow();

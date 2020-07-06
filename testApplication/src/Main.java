@@ -13,6 +13,9 @@ import java.net.SocketTimeoutException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class Main extends Application {
     public static InetAddress address;
     public static int port;
@@ -23,6 +26,7 @@ public class Main extends Application {
     final static int timeout = 5000;
     public static DatagramSocket datagramSocket;
     public static DatagramPacket datagramPacket;
+    private static ExecutorService cashedThread= Executors.newCachedThreadPool();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -38,14 +42,16 @@ public class Main extends Application {
     }
 
     public static void send(Commands command, DatagramSocket datagramSocket, DatagramPacket datagramPacket) {
-        try {
-            command.setLogin(owner);
-            b = serialize(command);
-            System.arraycopy(b, 0, c, 0, b.length);
-            datagramSocket.send(datagramPacket);
-        } catch (Exception e){
-            System.out.println("Неверный адрес");
-        }
+        cashedThread.submit(()->{
+            try {
+                command.setLogin(owner);
+                b = serialize(command);
+                System.arraycopy(b, 0, c, 0, b.length);
+                datagramSocket.send(datagramPacket);
+            } catch (Exception e){
+                System.out.println("Неверный адрес");
+            }
+        });
     }
 
     public static Commands receive(DatagramSocket datagramSocket) throws Exception {

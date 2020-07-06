@@ -39,7 +39,7 @@ public class AddController {
         Stage stage=(Stage)addButton.getScene().getWindow();
         boolean flag=true;
         try {
-            if (!nameTextField.getText().equals(null)) {
+            if (!nameTextField.getText().equals("")) {
                 band.setName(nameTextField.getText());
             }
             if (!xTextField.getText().equals(null)) {
@@ -66,13 +66,19 @@ public class AddController {
                 album.setName(bestAlbumTextField.getText());
                 band.setBestAlbum(album);
             }
+            else {
+                result.setText("Некоторые поля заполнены ошибочно!");
+                flag=false;
+            }
         } catch (Exception e){
             result.setText("Некоторые поля заполнены ошибочно!");
             flag=false;
         }
         if (flag) {
             commands.setBand(band);
+            band.setOwner(Main.owner);
             commands.setName(status);
+            System.out.println(commands);
             Main.send(commands, Main.datagramSocket, Main.datagramPacket);
             commands=Main.receive(Main.datagramSocket);
             stage.close();

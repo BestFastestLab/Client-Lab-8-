@@ -8,6 +8,8 @@ import javafx.scene.text.Text;
 import javafx.stage.*;
 
 import java.time.LocalDate;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ChangeController {
     @FXML
@@ -39,16 +41,16 @@ public class ChangeController {
     @FXML
     private Label result;
 
-    public void saveChangingClick() throws Exception{
-        Commands commands=new Commands();
-        MusicBand band=new MusicBand();
-        Coordinates coordinates=new Coordinates();
-        Album album=new Album();
+
+    public void saveChangingClick() throws Exception {
+        MusicBand band = new MusicBand();
+        Coordinates coordinates = new Coordinates();
+        Album album = new Album();
         band.setId(Integer.parseInt(idLabel.getText()));
         band.setCreationDate(LocalDate.parse(dateTextField.getText()));
-        boolean flag=true;
+        boolean flag = true;
         try {
-            if (!nameTextField.getText().equals(null)) {
+            if (!nameTextField.getText().equals("")) {
                 band.setName(nameTextField.getText());
             }
             if (!xTextField.getText().equals(null)) {
@@ -73,57 +75,72 @@ public class ChangeController {
             if (!bestAlbumTextField.getText().equals(null)) {
                 album.setName(bestAlbumTextField.getText());
                 band.setBestAlbum(album);
+            } else {
+                result.setText("Некоторые поля заполнены ошибочно!");
+                flag = false;
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             result.setText("Некоторые поля заполнены ошибочно!");
-            flag=false;
+            flag = false;
         }
         if (flag) {
+
+            Commands commands = new Commands();
             commands.setBand(band);
             commands.setName("clickUpdate");
             Main.send(commands, Main.datagramSocket, Main.datagramPacket);
-            commands=Main.receive(Main.datagramSocket);
-            Stage stage=(Stage)updateButton.getScene().getWindow();
+            commands = Main.receive(Main.datagramSocket);
+            Stage stage = (Stage) updateButton.getScene().getWindow();
             stage.close();
         }
     }
 
-    public void returnClick(){
-        Stage stage=(Stage)returnButton.getScene().getWindow();
+    public void returnClick() {
+        Stage stage = (Stage) returnButton.getScene().getWindow();
         stage.close();
     }
 
-    public void setNameTextField(String nameTextField){
+    public void setNameTextField(String nameTextField) {
         this.nameTextField.setText(nameTextField);
     }
-    public void setXTextField(Double x){
+
+    public void setXTextField(Double x) {
         this.xTextField.setText(x.toString());
     }
-    public void setYTextField(Long y){
+
+    public void setYTextField(Long y) {
         this.yTextField.setText(y.toString());
     }
-    public void setDateTextField(LocalDate date){
+
+    public void setDateTextField(LocalDate date) {
         this.dateTextField.setText(date.toString());
     }
-    public void setParticipantsTextField(Long participants){
+
+    public void setParticipantsTextField(Long participants) {
         this.participantsTextField.setText(participants.toString());
     }
-    public void setSinglesTextField(Long singles){
+
+    public void setSinglesTextField(Long singles) {
         this.singlesTextField.setText(singles.toString());
     }
-    public void setAlbumsTextField(Long albums){
+
+    public void setAlbumsTextField(Long albums) {
         this.albumsTextField.setText(albums.toString());
     }
-    public void setGenreTextField(MusicGenre genre){
+
+    public void setGenreTextField(MusicGenre genre) {
         this.genreTextField.setText(genre.toString());
     }
-    public void setBestAlbumTextField(Album album){
+
+    public void setBestAlbumTextField(Album album) {
         this.bestAlbumTextField.setText(album.getName());
     }
-    public void setIdLabel(Integer id){
+
+    public void setIdLabel(Integer id) {
         this.idLabel.setText(id.toString());
     }
-    public void setOwnerLabel(String owner){
+
+    public void setOwnerLabel(String owner) {
         this.ownerLabel.setText(owner);
     }
 }
